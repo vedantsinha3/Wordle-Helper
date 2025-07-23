@@ -46,7 +46,3 @@ for (const std::string& word : results) {
 * `allowed.txt`: Official list of allowed guesses.
 
 ---
-
-## 📝 GitHub Description
-
-> 🧠 C++ Wordle-solving assistant that narrows down answers using green, yellow, and gray clues. Reads official Wordle answer + guess lists and outputs all remaining candidates. CLI-ready.
