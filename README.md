@@ -1,48 +1,54 @@
-## 🧠 WordleHelper
+# Wordle Helper
 
-### Overview
+A Wordle-solving assistant that uses a React-based frontend and a C++ backend to filter valid guesses based on green, yellow, and gray clues. The app mimics Wordle’s logic to eliminate impossible words and suggest likely solutions.
 
-**WordleHelper** is a C++ command-line tool designed to help you crack the Wordle puzzle by filtering possible answers based on your green, yellow, and gray letter feedback.
+## 🧠 Features
 
-This project loads real Wordle answer lists and allowed guesses from external text files, then eliminates candidates that don’t match your given feedback. The more feedback you feed it, the more precise the solution set becomes.
+- Accurate clue parsing (green/yellow/gray)
+- Smart elimination of invalid words
+- React-based UI for smooth interaction
+- C++ backend handles fast logic and filtering
+- Built using official Wordle answer and guess lists
 
-### Features
+## 🖥️ Frontend
 
-* ✅ Supports green (correct position), yellow (wrong position), and gray (not in word) feedback.
-* 🔎 Filters based on actual `answers.txt` and `allowed.txt` files from the official Wordle dataset.
-* 🛡️ Validates feedback inputs for format and correctness.
-* 🧪 Generates a list of all possible remaining answers.
+Built with [React](https://reactjs.org/):
 
-### Requirements
+- Users input guesses and receive visual feedback
+- Clean UI mimics Wordle's color-coded logic
+- Communicates with backend via local API or file I/O
 
-* C++11 or higher
+## ⚙️ Backend (C++)
 
-### Compilation
+Handles:
+- Green clue enforcement (exact position)
+- Yellow clue enforcement (must be present, wrong position)
+- Gray clue handling with per-position logic
+- Letter frequency and double-letter logic
+
+### Compile Instructions
 
 ```bash
-g++ -std=c++11 -o wordle WordleHelper.cpp
+g++ -std=c++17 -g -o app WordleHelper.cpp main.cpp
+````
+
+### Run
+
+```bash
+./app
 ```
 
-> Make sure `answers.txt` and `allowed.txt` are in the same directory as the executable.
+> Alternatively, connect to frontend via API or integrate with Electron for desktop packaging.
 
-### Example Usage
+## 📁 Project Structure
 
-```cpp
-WordleHelper helper;
-helper.addGreen("_p__e");    // e.g., 'p' in position 2, 'e' in position 5
-helper.addYellow("a___r");   // 'a' and 'r' are in the word but wrong positions
-helper.addGray("cnd");       // letters definitely not in the word
-
-std::vector<std::string> results = helper.possibleSolutions();
-for (const std::string& word : results) {
-    std::cout << word << std::endl;
-}
+```
+/frontend         # React frontend
+/backend          # C++ logic engine
+answers.txt       # Official Wordle answer list
+allowed.txt       # Allowed guesses list
 ```
 
-### Files
+## 📝 License
 
-* `WordleHelper.h`: Header file and implementation of the helper class.
-* `answers.txt`: Official list of Wordle answer words.
-* `allowed.txt`: Official list of allowed guesses.
-
----
+MIT License
