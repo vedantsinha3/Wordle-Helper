@@ -190,7 +190,7 @@ function App() {
                   Solving...
                 </>
               ) : (
-                "🔍 Find Solutions"
+                "Find Solutions"
               )}
             </button>
           </form>
@@ -210,7 +210,7 @@ function App() {
           </h2>
           {solutions.length === 0 ? (
             <div className="no-results">
-              <span className="no-results-icon">🤔</span>
+              <span className="no-results-icon"></span>
               <p>No solutions yet. Enter your clues above to get started!</p>
             </div>
           ) : (
