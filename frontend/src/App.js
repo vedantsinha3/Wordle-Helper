@@ -147,7 +147,7 @@ function App() {
     <div className="app">
       <div className="container">
         <header className="header">
-          <h1 className="title">🟩 Wordle Helper</h1>
+          <h1 className="title">Wordle Helper</h1>
           <p className="subtitle">Click cells to set color, type letters for your guesses!</p>
         </header>
         <div className="card">
@@ -172,7 +172,16 @@ function App() {
             </div>
             <div className="grid-controls">
               <button type="button" className="add-btn" onClick={addRow}>+ Add Row</button>
-              <button type="button" className="remove-btn" onClick={removeRow} disabled={grid.length === 1}>- Remove Row</button>
+              <button
+                type="button"
+                className="remove-row-btn"
+                onClick={removeRow}
+                disabled={grid.length === 1}
+                title="Remove last row"
+                aria-label="Remove last row"
+              >
+                <span style={{fontSize: '1.5rem', lineHeight: 1, display: 'block', fontWeight: 'bold'}}>&minus;</span>
+              </button>
             </div>
             <button type="submit" disabled={loading} className="submit-btn">
               {loading ? (
