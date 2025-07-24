@@ -6,7 +6,6 @@ A Wordle-solving assistant that uses a React-based frontend and a C++ backend to
 
 Here's how the Wordle Helper interface looks:
 
-![Wordle Helper Screenshot](./assets/screenshot.png)
 <img width="1680" height="850" alt="image" src="https://github.com/user-attachments/assets/a49ae3a5-cf55-428f-b0dc-c4ce1eafd3f8" />
 
 
