@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <set>
 
 class WordleHelper{
  
@@ -113,39 +114,95 @@ public:
     }
 
     std::vector<std::string> possibleSolutions() {
-    std::vector<std::string> result = answers;
-
-    // Iterate through the green feedback
-    for (const std::string& currGreen : green) {
+        std::vector<std::string> result = answers;
+    
+        std::string greenPattern = "_____"; // green letters in their positions
+        std::map<char, std::set<int>> yellowPositions; // letter -> positions it cannot be in
+        std::set<char> mustContain; // all yellow letters
+        std::set<char> globalGrayLetters; // gray letters that never appear green/yellow
+        std::map<char, std::set<int>> grayPositions; // letters banned from specific positions
+    
+        // Build green pattern
+        for (const std::string& currGreen : green) {
+            for (int i = 0; i < 5; ++i) {
+                if (currGreen[i] != '_') {
+                    greenPattern[i] = currGreen[i];
+                }
+            }
+        }
+    
+        // Handle yellow clues
+        for (const std::string& currYellow : yellow) {
+            for (int i = 0; i < 5; ++i) {
+                if (currYellow[i] != '_') {
+                    mustContain.insert(currYellow[i]);
+                    yellowPositions[currYellow[i]].insert(i); // cannot be in this position
+                }
+            }
+        }
+    
+        // Handle gray clues
+        for (const std::string& currGray : gray) {
+            for (int i = 0; i < 5; ++i) {
+                char c = currGray[i];
+                if (c >= 'a' && c <= 'z') {
+                    // If letter appears nowhere in green or yellow, ban it entirely
+                    bool isGreenOrYellow = false;
+                    for (const std::string& g : green)
+                        if (g.find(c) != std::string::npos) isGreenOrYellow = true;
+                    for (const std::string& y : yellow)
+                        if (y.find(c) != std::string::npos) isGreenOrYellow = true;
+    
+                    if (isGreenOrYellow) {
+                        grayPositions[c].insert(i); // only ban it from this position
+                    } else {
+                        globalGrayLetters.insert(c); // ban it completely
+                    }
+                }
+            }
+        }
+    
+        // Start filtering
         result.erase(std::remove_if(result.begin(), result.end(), [&](const std::string& word) {
-            return !satisfyGreen(word, currGreen);
-        }), result.end());
-    }
-
-    // Iterate through the yellow feedback
-    for (const std::string& currYellow : yellow) {
-        result.erase(std::remove_if(result.begin(), result.end(), [&](const std::string& word) {
-            for (int i = 0; i < 5; i++) {
-                if (currYellow[i] != '_' && !contains(word, currYellow[i])) {
+            // Check green pattern
+            for (int i = 0; i < 5; ++i) {
+                if (greenPattern[i] != '_' && word[i] != greenPattern[i]) {
                     return true;
                 }
             }
+    
+            // Check yellow constraints
+            for (const auto& [ch, bannedPos] : yellowPositions) {
+                if (word.find(ch) == std::string::npos) return true; // must contain yellow letter
+                if (bannedPos.count(word.find(ch)) > 0) return true; // letter is in a banned position
+                for (int pos : bannedPos) {
+                    if (word[pos] == ch) return true;
+                }
+            }
+    
+            // Check gray letters
+            for (char c : globalGrayLetters) {
+                if (word.find(c) != std::string::npos) return true;
+            }
+    
+            // Check position-specific gray bans
+            for (const auto& [ch, positions] : grayPositions) {
+                for (int pos : positions) {
+                    if (word[pos] == ch) return true;
+                }
+            }
+    
+            // Check mustContain letters are present
+            for (char c : mustContain) {
+                if (word.find(c) == std::string::npos) return true;
+            }
+    
             return false;
         }), result.end());
+    
+        return result;
     }
-
-    // Iterate through the gray feedback
-    for (const std::string& currGray : gray) {
-        result.erase(std::remove_if(result.begin(), result.end(), [&](const std::string& word) {
-            return std::any_of(currGray.begin(), currGray.end(), [&](char c) {
-                return contains(word, c);
-            });
-        }), result.end());
-    }
-
-    return result;
-
-}
+    
 };
 
 #endif
