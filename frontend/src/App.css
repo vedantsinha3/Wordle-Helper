@@ -517,3 +517,201 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.opening-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.opening-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.opening-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Suggestions Section */
+.suggestions-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  margin-bottom: 30px;
+  animation: fadeInUp 0.8s ease-out 0.5s both;
+  border-left: 4px solid #667eea;
+}
+
+.suggestions-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.suggestions-count {
+  background: #e9eaf0;
+  color: #444;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.suggestions-subtitle {
+  color: #666;
+  font-size: 1rem;
+  margin: 0 0 20px 0;
+  font-style: italic;
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.suggestion-item {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+  border: 2px solid #e1e5f7;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
+}
+
+.suggestion-word {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+}
+
+.suggestion-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suggestion-score {
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.suggestion-metrics {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.metric {
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.info-gain {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.strategic {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.possible-solution {
+  background: #e8f5e8;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.opening-tip {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 1px solid #f39c12;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  color: #d35400;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.no-results-hint {
+  color: #888;
+  font-size: 0.95rem;
+  margin-top: 8px;
+}
+
+/* Responsive adjustments for suggestions */
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .opening-btn, .submit-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .suggestions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .suggestion-item {
+    padding: 14px;
+  }
+  
+  .suggestion-word {
+    font-size: 1.2rem;
+  }
+  
+  .suggestion-metrics {
+    gap: 6px;
+  }
+  
+  .metric {
+    font-size: 0.8rem;
+    padding: 3px 6px;
+  }
+}

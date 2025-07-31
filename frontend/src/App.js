@@ -19,8 +19,12 @@ function App() {
     Array(5).fill({ letter: "", color: "blank" }),
   ]);
   const [solutions, setSolutions] = useState([]);
+  const [nextBestGuesses, setNextBestGuesses] = useState([]);
+  const [previousGuesses, setPreviousGuesses] = useState([]);
+  const [solutionsCount, setSolutionsCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showOpeningWords, setShowOpeningWords] = useState(false);
 
   // Add a new guess row
   const addRow = () => {
@@ -109,12 +113,30 @@ function App() {
     };
   };
 
+  // Extract guessed words from grid
+  const extractGuessedWords = () => {
+    const guesses = [];
+    for (const row of grid) {
+      const word = row.map(cell => cell.letter).join('');
+      if (word.length === 5 && word.replace(/[^a-z]/g, '').length === 5) {
+        guesses.push(word);
+      }
+    }
+    return guesses;
+  };
+
   // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSolutions([]);
+    setNextBestGuesses([]);
+    setSolutionsCount(0);
+    setShowOpeningWords(false);
+    
     const { green, yellow, gray } = convertGridToFeedback();
+    const currentGuesses = extractGuessedWords();
+    
     // Validation: all rows must be 5 letters or blank
     for (const row of grid) {
       for (const cell of row) {
@@ -129,11 +151,40 @@ function App() {
       const response = await fetch("http://localhost:5000/solve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ green, yellow, gray }),
+        body: JSON.stringify({ 
+          green, 
+          yellow, 
+          gray,
+          previous_guesses: currentGuesses
+        }),
       });
       const data = await response.json();
       if (response.ok) {
-        setSolutions(data.solutions);
+        setSolutions(data.solutions || []);
+        setNextBestGuesses(data.next_best_guesses || []);
+        setSolutionsCount(data.solutions_count || 0);
+        setPreviousGuesses(currentGuesses);
+      } else {
+        setError(data.error || "Unknown error");
+      }
+    } catch (err) {
+      setError("Failed to connect to backend.");
+    }
+    setLoading(false);
+  };
+
+  // Get best opening words
+  const handleGetOpeningWords = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/best_opening");
+      const data = await response.json();
+      if (response.ok) {
+        setNextBestGuesses(data.best_opening_words || []);
+        setShowOpeningWords(true);
+        setSolutions([]);
+        setSolutionsCount(0);
       } else {
         setError(data.error || "Unknown error");
       }
@@ -183,16 +234,33 @@ function App() {
                 <span style={{fontSize: '1.5rem', lineHeight: 1, display: 'block', fontWeight: 'bold'}}>&minus;</span>
               </button>
             </div>
-            <button type="submit" disabled={loading} className="submit-btn">
-              {loading ? (
-                <>
-                  <span className="spinner"></span>
-                  Solving...
-                </>
-              ) : (
-                "Find Solutions"
-              )}
-            </button>
+            <div className="button-group">
+              <button type="submit" disabled={loading} className="submit-btn">
+                {loading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Solving...
+                  </>
+                ) : (
+                  "Find Solutions"
+                )}
+              </button>
+              <button 
+                type="button" 
+                onClick={handleGetOpeningWords} 
+                disabled={loading}
+                className="opening-btn"
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Loading...
+                  </>
+                ) : (
+                  "📚 Best Opening Words"
+                )}
+              </button>
+            </div>
           </form>
         </div>
         {error && (
@@ -201,19 +269,69 @@ function App() {
             {error}
           </div>
         )}
+        {/* Next Best Guesses Section */}
+        {nextBestGuesses.length > 0 && (
+          <div className="suggestions-card">
+            <h2 className="suggestions-title">
+              {showOpeningWords ? "🎯 Best Opening Words" : "💡 Next Best Guesses"}
+              <span className="suggestions-count">({nextBestGuesses.length} suggestions)</span>
+            </h2>
+            <p className="suggestions-subtitle">
+              {showOpeningWords 
+                ? "These words maximize information gain for your first guess"
+                : "Strategic words that will help narrow down the solution"
+              }
+            </p>
+            <div className="suggestions-grid">
+              {nextBestGuesses.map((suggestion, idx) => (
+                <div key={idx} className="suggestion-item">
+                  <div className="suggestion-word">
+                    {suggestion.word.toUpperCase()}
+                  </div>
+                  <div className="suggestion-details">
+                    <div className="suggestion-score">
+                      Score: {suggestion.score.toFixed(2)}
+                    </div>
+                    <div className="suggestion-metrics">
+                      {suggestion.information_gain > 0 && (
+                        <span className="metric info-gain">
+                          Info: {suggestion.information_gain.toFixed(2)}
+                        </span>
+                      )}
+                      <span className="metric strategic">
+                        Strategic: {suggestion.strategic_score.toFixed(2)}
+                      </span>
+                      {suggestion.is_possible_solution && (
+                        <span className="metric possible-solution">✓ Possible Answer</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {showOpeningWords && (
+              <div className="opening-tip">
+                💡 <strong>Tip:</strong> Try "AROSE" or "AUDIO" - they contain the most common vowels and consonants!
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Solutions Section */}
         <div className="results-card">
           <h2 className="results-title">
             Possible Solutions
-            {solutions.length > 0 && (
-              <span className="results-count">({solutions.length} found)</span>
+            {solutionsCount > 0 && (
+              <span className="results-count">({solutionsCount} found)</span>
             )}
           </h2>
-          {solutions.length === 0 ? (
+          {solutions.length === 0 && !showOpeningWords ? (
             <div className="no-results">
-              <span className="no-results-icon"></span>
+              <span className="no-results-icon">🎯</span>
               <p>No solutions yet. Enter your clues above to get started!</p>
+              <p className="no-results-hint">Or click "Best Opening Words" to see optimal starting guesses</p>
             </div>
-          ) : (
+          ) : solutions.length > 0 ? (
             <div className="solutions-grid">
               {solutions.map((word, idx) => (
                 <div key={idx} className="solution-item">
@@ -221,7 +339,12 @@ function App() {
                 </div>
               ))}
             </div>
-          )}
+          ) : showOpeningWords ? (
+            <div className="no-results">
+              <span className="no-results-icon">🎮</span>
+              <p>Ready to start? Use one of the suggested opening words above!</p>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
