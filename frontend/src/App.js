@@ -257,7 +257,7 @@ function App() {
                     Loading...
                   </>
                 ) : (
-                  "📚 Best Opening Words"
+                  "Best Opening Words"
                 )}
               </button>
             </div>
