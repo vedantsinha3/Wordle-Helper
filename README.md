@@ -6,7 +6,8 @@ An intelligent Wordle-solving assistant featuring **AI-driven word suggestions**
 
 Here's how the enhanced Wordle Helper interface looks:
 
-<img width="1680" height="850" alt="image" src="https://github.com/user-attachments/assets/a49ae3a5-cf55-428f-b0dc-c4ce1eafd3f8" />
+<img width="1680" height="845" alt="image" src="https://github.com/user-attachments/assets/9423cdd9-4448-413b-b13c-e327a8da89a2" />
+
 
 ## 🧠 Advanced Features
 
