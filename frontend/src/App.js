@@ -311,19 +311,17 @@ function App() {
             </p>
             <div className="suggestions-grid">
               {nextBestGuesses.map((suggestion, idx) => (
-                <div key={idx} className="suggestion-item">
+                <button
+                  key={idx}
+                  type="button"
+                  className="suggestion-item suggestion-item-btn"
+                  onClick={() => handleUseSuggestion(suggestion.word)}
+                  title="Add this word to the grid"
+                >
                   <div className="suggestion-word-row">
                     <span className="suggestion-word">
                       {suggestion.word.toUpperCase()}
                     </span>
-                    <button
-                      type="button"
-                      className="use-word-btn"
-                      onClick={() => handleUseSuggestion(suggestion.word)}
-                      title="Add this word to the grid"
-                    >
-                      Use
-                    </button>
                   </div>
                   <div className="suggestion-details">
                     <div className="suggestion-score">
@@ -343,7 +341,7 @@ function App() {
                       )}
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
             {showOpeningWords && (
