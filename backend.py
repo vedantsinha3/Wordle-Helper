@@ -265,21 +265,21 @@ def solve():
         # Get next best guesses
         next_best = solver.get_next_best_guesses(green, yellow, gray, previous_guesses)
         
-        # Also get C++ results for comparison (fallback)
+        # C++ binary only works locally (macOS/Linux); skip on Render
         cpp_solutions = []
-        try:
-            cmd = ['./app']
-            for g in green:
-                cmd += ['--green', g]
-            for y in yellow:
-                cmd += ['--yellow', y]
-            for gr in gray:
-                cmd += ['--gray', gr]
-            
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-            cpp_solutions = result.stdout.strip().split('\n') if result.stdout.strip() else []
-        except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-            pass  # Use Python implementation; C++ binary may not exist or be wrong architecture
+        if not os.environ.get('PORT'):
+            try:
+                cmd = ['./app']
+                for g in green:
+                    cmd += ['--green', g]
+                for y in yellow:
+                    cmd += ['--yellow', y]
+                for gr in gray:
+                    cmd += ['--gray', gr]
+                result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+                cpp_solutions = result.stdout.strip().split('\n') if result.stdout.strip() else []
+            except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+                pass
         
         return jsonify({
             'solutions': solutions,
