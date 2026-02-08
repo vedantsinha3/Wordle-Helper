@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env
+
+# Node
+node_modules/
+frontend/build/
+
+# C++ build
+app
+app.dSYM/
+*.o
+
+# IDE / OS
+.vscode/
+.DS_Store
+
+# Misc
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
