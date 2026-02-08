@@ -37,6 +37,16 @@ function App() {
     if (grid.length > 1) setGrid(grid.slice(0, -1));
   };
 
+  // Clear everything to blank state
+  const handleClear = () => {
+    setGrid([Array(5).fill({ letter: "", color: "blank" })]);
+    setSolutions([]);
+    setNextBestGuesses([]);
+    setSolutionsCount(0);
+    setError("");
+    setShowOpeningWords(false);
+  };
+
   // Handle letter input
   const handleLetterChange = (rowIdx, colIdx, value) => {
     if (value.length > 1) return;
@@ -232,6 +242,9 @@ function App() {
                 aria-label="Remove last row"
               >
                 −
+              </button>
+              <button type="button" className="add-btn" onClick={handleClear}>
+                Clear
               </button>
             </div>
             <div className="button-group">
