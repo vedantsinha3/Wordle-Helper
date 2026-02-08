@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./App.css";
 
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5001";
+
 const COLORS = ["blank", "gray", "yellow", "green"];
 const COLOR_CLASSES = {
   blank: "cell-blank",
@@ -148,7 +150,7 @@ function App() {
     }
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5001/solve", {
+      const response = await fetch(`${API_BASE}/solve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -178,7 +180,7 @@ function App() {
     setError("");
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5001/best_opening");
+      const response = await fetch(`${API_BASE}/best_opening`);
       const data = await response.json();
       if (response.ok) {
         setNextBestGuesses(data.best_opening_words || []);

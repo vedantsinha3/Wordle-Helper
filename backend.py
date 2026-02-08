@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 import subprocess
 import math
 from collections import Counter, defaultdict
@@ -306,4 +307,5 @@ def best_opening():
         return jsonify({'error': str(e), 'status': 'error'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(debug=False, host='0.0.0.0', port=port)
