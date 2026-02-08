@@ -148,7 +148,7 @@ function App() {
     }
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/solve", {
+      const response = await fetch("http://localhost:5001/solve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -178,7 +178,7 @@ function App() {
     setError("");
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/best_opening");
+      const response = await fetch("http://localhost:5001/best_opening");
       const data = await response.json();
       if (response.ok) {
         setNextBestGuesses(data.best_opening_words || []);
@@ -199,7 +199,7 @@ function App() {
       <div className="container">
         <header className="header">
           <h1 className="title">Wordle Helper</h1>
-          <p className="subtitle">Click cells to set color, type letters for your guesses!</p>
+          <p className="subtitle">Click cells to cycle color (blank → gray → yellow → green). Type letters for guesses.</p>
         </header>
         <div className="card">
           <form onSubmit={handleSubmit} className="form">
@@ -231,7 +231,7 @@ function App() {
                 title="Remove last row"
                 aria-label="Remove last row"
               >
-                <span style={{fontSize: '1.5rem', lineHeight: 1, display: 'block', fontWeight: 'bold'}}>&minus;</span>
+                −
               </button>
             </div>
             <div className="button-group">
@@ -265,7 +265,6 @@ function App() {
         </div>
         {error && (
           <div className="error-card">
-            <span className="error-icon">⚠️</span>
             {error}
           </div>
         )}
@@ -273,8 +272,8 @@ function App() {
         {nextBestGuesses.length > 0 && (
           <div className="suggestions-card">
             <h2 className="suggestions-title">
-              {showOpeningWords ? "🎯 Best Opening Words" : "💡 Next Best Guesses"}
-              <span className="suggestions-count">({nextBestGuesses.length} suggestions)</span>
+              {showOpeningWords ? "Best Opening Words" : "Next Best Guesses"}
+              <span className="suggestions-count">({nextBestGuesses.length})</span>
             </h2>
             <p className="suggestions-subtitle">
               {showOpeningWords 
@@ -311,7 +310,7 @@ function App() {
             </div>
             {showOpeningWords && (
               <div className="opening-tip">
-                💡 <strong>Tip:</strong> Try "AROSE" or "AUDIO" - they contain the most common vowels and consonants!
+                Tip: Try "AROSE" or "AUDIO" — they contain the most common vowels and consonants.
               </div>
             )}
           </div>
@@ -322,14 +321,13 @@ function App() {
           <h2 className="results-title">
             Possible Solutions
             {solutionsCount > 0 && (
-              <span className="results-count">({solutionsCount} found)</span>
+              <span className="results-count">({solutionsCount})</span>
             )}
           </h2>
           {solutions.length === 0 && !showOpeningWords ? (
             <div className="no-results">
-              <span className="no-results-icon">🎯</span>
-              <p>No solutions yet. Enter your clues above to get started!</p>
-              <p className="no-results-hint">Or click "Best Opening Words" to see optimal starting guesses</p>
+              <p>Enter your clues above to get solutions and suggestions.</p>
+              <p className="no-results-hint">Or use Best Opening Words for optimal starting guesses.</p>
             </div>
           ) : solutions.length > 0 ? (
             <div className="solutions-grid">
@@ -341,8 +339,7 @@ function App() {
             </div>
           ) : showOpeningWords ? (
             <div className="no-results">
-              <span className="no-results-icon">🎮</span>
-              <p>Ready to start? Use one of the suggested opening words above!</p>
+              <p>Use one of the suggested opening words above to begin.</p>
             </div>
           ) : null}
         </div>
