@@ -2,7 +2,8 @@
 
 A Wordle assistant that suggests guesses based on information theory (Shannon entropy) and letter frequency analysis. Uses the official 2,315 Wordle answers and 10,657 valid guesses.
 
-![Screenshot](https://github.com/user-attachments/assets/9423cdd9-4448-413b-b13c-e327a8da89a2)
+<img width="1710" height="891" alt="image" src="https://github.com/user-attachments/assets/748f3e3f-503c-46ed-953e-84d194cd0bab" />
+
 
 ## Quick Start
 
