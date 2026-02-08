@@ -278,8 +278,8 @@ def solve():
             
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             cpp_solutions = result.stdout.strip().split('\n') if result.stdout.strip() else []
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            pass  # Use Python implementation as primary
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+            pass  # Use Python implementation; C++ binary may not exist or be wrong architecture
         
         return jsonify({
             'solutions': solutions,
