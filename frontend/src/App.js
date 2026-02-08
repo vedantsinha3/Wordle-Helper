@@ -22,7 +22,6 @@ function App() {
   ]);
   const [solutions, setSolutions] = useState([]);
   const [nextBestGuesses, setNextBestGuesses] = useState([]);
-  const [previousGuesses, setPreviousGuesses] = useState([]);
   const [solutionsCount, setSolutionsCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -165,7 +164,6 @@ function App() {
         setSolutions(data.solutions || []);
         setNextBestGuesses(data.next_best_guesses || []);
         setSolutionsCount(data.solutions_count || 0);
-        setPreviousGuesses(currentGuesses);
       } else {
         setError(data.error || "Unknown error");
       }
