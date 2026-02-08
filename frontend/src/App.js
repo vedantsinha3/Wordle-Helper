@@ -37,6 +37,21 @@ function App() {
     if (grid.length > 1) setGrid(grid.slice(0, -1));
   };
 
+  // Fill current row if empty, otherwise add a new row with the suggested word
+  const handleUseSuggestion = (word) => {
+    const letters = (word || "").toLowerCase().slice(0, 5).split("");
+    if (letters.length !== 5) return;
+    const newRow = letters.map((letter) => ({ letter, color: "blank" }));
+    setGrid((prev) => {
+      const lastRow = prev[prev.length - 1];
+      const lastRowEmpty = lastRow.every((cell) => !cell.letter);
+      if (lastRowEmpty) {
+        return [...prev.slice(0, -1), newRow];
+      }
+      return [...prev, newRow];
+    });
+  };
+
   // Clear everything to blank state
   const handleClear = () => {
     setGrid([Array(5).fill({ letter: "", color: "blank" })]);
@@ -297,8 +312,18 @@ function App() {
             <div className="suggestions-grid">
               {nextBestGuesses.map((suggestion, idx) => (
                 <div key={idx} className="suggestion-item">
-                  <div className="suggestion-word">
-                    {suggestion.word.toUpperCase()}
+                  <div className="suggestion-word-row">
+                    <span className="suggestion-word">
+                      {suggestion.word.toUpperCase()}
+                    </span>
+                    <button
+                      type="button"
+                      className="use-word-btn"
+                      onClick={() => handleUseSuggestion(suggestion.word)}
+                      title="Add this word to the grid"
+                    >
+                      Use
+                    </button>
                   </div>
                   <div className="suggestion-details">
                     <div className="suggestion-score">
